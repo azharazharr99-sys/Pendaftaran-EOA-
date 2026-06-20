@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran EOA</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1920');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 antialiased relative overflow-hidden">
+
+    <!-- 1. ANIMASI LOADING AWAL DENGAN PERSENAN -->
+    <div id="loadingAwal" class="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center z-50 transition-opacity duration-500 ease-out">
+        <div class="relative flex items-center justify-center mb-4">
+            <div class="animate-spin rounded-full h-20 w-20 border-4 border-purple-500/20 border-t-purple-400"></div>
+            <!-- Angka Persen di Tengah Lingkaran -->
+            <div id="persenAwal" class="absolute text-white font-bold text-sm">0%</div>
+        </div>
+        <h2 class="text-white text-sm font-bold tracking-widest bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent animate-pulse uppercase">
+            Memuat Sistem EOA
+        </h2>
+    </div>
+
+    <!-- KARTU FORM UTAMA -->
+    <div id="kontenUtama" class="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-8 my-8 text-white opacity-0 transition-opacity duration-500">
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                PENDAFTARAN EOA
+            </h1>
+            <p class="text-sm text-gray-300 mt-2">Silakan isi formulir di bawah ini dengan benar</p>
+        </div>
+
+        <form id="formPendaftaran" class="space-y-5" autocomplete="off">
+            
+            <!-- Nama Lengkap -->
+            <div>
+                <label for="nama" class="block text-sm font-medium text-gray-200 mb-1">Nama Lengkap</label>
+                <input type="text" id="nama" required minlength="3"
+                    class="w-full px-4 py-2.5 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    placeholder="Masukkan nama sesuai KTP/KK">
+                <p id="errNama" class="hidden text-xs text-red-400 mt-1">❌ Nama tidak boleh mengandung angka atau simbol!</p>
+            </div>
+
+            <!-- Grid untuk Tanggal Lahir & Umur -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Tanggal Lahir -->
+                <div>
+                    <label for="tanggalLahir" class="block text-sm font-medium text-gray-200 mb-1">Tanggal Lahir</label>
+                    <input type="text" id="tanggalLahir" required maxlength="10"
+                        class="w-full px-4 py-2.5 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                        placeholder="DD/MM/YYYY">
+                    <p id="errTgl" class="hidden text-xs text-red-400 mt-1">❌ Tanggal tidak valid!</p>
+                </div>
+                <!-- Umur -->
+                <div>
+                    <label for="umur" class="block text-sm font-medium text-gray-200 mb-1">Umur (Tahun)</label>
+                    <input type="number" id="umur" required min="5" max="90"
+                        class="w-full px-4 py-2.5 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                        placeholder="Contoh: 19">
+                    <p id="errUmur" class="hidden text-xs text-red-400 mt-1">❌ Umur & Tahun Lahir tidak cocok!</p>
+                </div>
+            </div>
+
+            <!-- Tempat Tinggal / Alamat -->
+            <div>
+                <label for="alamat" class="block text-sm font-medium text-gray-200 mb-1">Tempat Tinggal (Kota/Alamat)</label>
+                <input type="text" id="alamat" required minlength="5"
+                    class="w-full px-4 py-2.5 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    placeholder="Contoh: Jakarta Selatan">
+            </div>
+
+            <!-- Jenjang Sekolah atau Pekerjaan -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-200 mb-1">Jenjang Sekolah / Pekerjaan</label>
+                <select id="status" required
+                    class="w-full px-4 py-2.5 bg-black/50 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    <option value="" disabled selected class="text-gray-400">-- Pilih Status --</option>
+                    <option value="Pelajar SD/SMP/SMA" class="bg-slate-900">Pelajar (SD/SMP/SMA)</option>
+                    <option value="Mahasiswa" class="bg-slate-900">Mahasiswa</option>
+                    <option value="Karyawan / Pekerja" class="bg-slate-900">Karyawan / Pekerja</option>
+                    <option value="Wiraswasta" class="bg-slate-900">Wiraswasta</option>
+                    <option value="Belum Bekerja / Lainnya" class="bg-slate-900">Belum Bekerja / Lainnya</option>
+                </select>
+            </div>
+
+            <!-- Alamat Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-200 mb-1">Alamat Email</label>
+                <input type="email" id="email" required
+                    class="w-full px-4 py-2.5 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    placeholder="contoh@email.com">
+            </div>
+
+            <!-- Nomor WhatsApp Anda -->
+            <div>
+                <label for="whatsapp" class="block text-sm font-medium text-gray-200 mb-1">Nomor WhatsApp Anda</label>
+                <input type="tel" id="whatsapp" required minlength="9" maxlength="15"
+                    class="w-full px-4 py-2.5 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    placeholder="08xxxxxxxxxx">
+                <p id="errWA" class="hidden text-xs text-red-400 mt-1">❌ Masukkan nomor WhatsApp Indonesia yang valid!</p>
+            </div>
+
+            <!-- Pilihan Program -->
+            <div>
+                <label for="program" class="block text-sm font-medium text-gray-200 mb-1">Pilih Program</label>
+                <select id="program" required
+                    class="w-full px-4 py-2.5 bg-black/50 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+                    <option value="" disabled selected class="text-gray-400">-- Pilih Program --</option>
+                    <option value="Program EOA Reguler" class="bg-slate-900">Program EOA Reguler</option>
+                    <option value="Program EOA Intens" class="bg-slate-900">Program EOA Intensif</option>
+                    <option value="Program EOA Eksekutif" class="bg-slate-900">Program EOA Eksekutif</option>
+                </select>
+            </div>
+
+            <!-- Tombol Submit -->
+            <button type="submit" id="btnSubmit"
+                class="w-full mt-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center gap-2">
+                <span id="btnText">Daftar Sekarang</span>
+                <svg id="loadingIcon" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </button>
+
+        </form>
+
+        <p class="text-center text-xs text-gray-400 mt-6">
+            &copy; 2026 EOA Registration. All rights reserved.
+        </p>
+    </div>
+
+    <!-- POP-UP NOTIFIKASI PROSES KIRIM DATA (PERSENAN KEDUA) -->
+    <div id="popupSukses" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl p-6 text-center shadow-2xl max-w-xs w-full text-white fade-in">
+            <div class="relative flex items-center justify-center h-20 w-20 mx-auto mb-4">
+                <div class="animate-spin rounded-full h-full w-full border-4 border-green-500/20 border-t-green-400"></div>
+                <div id="persenKirim" class="absolute text-green-400 font-bold text-base">0%</div>
+            </div>
+            <h3 id="statusKirimText" class="text-lg font-bold mb-1">Memproses Data...</h3>
+            <p class="text-xs text-gray-300">Sedang mengompresi berkas formulir</p>
+        </div>
+    </div>
+
+    <!-- SCRIPT UTAMA -->
+    <script>
+        // Efek Auto-format / pada Tanggal Lahir saat mengetik
+        const inputTgl = document.getElementById('tanggalLahir');
+        inputTgl.addEventListener('input', function(e) {
+            let nilai = e.target.value.replace(/\D/g, "");
+            let hasil = "";
+            if (nilai.length > 0) {
+                hasil += nilai.substring(0, 2);
+                if (nilai.length > 2) {
+                    hasil += '/' + nilai.substring(2, 4);
+                    if (nilai.length > 4) {
+                        hasil += '/' + nilai.substring(4, 8);
+                    }
+                }
+            }
+            e.target.value = hasil;
+        });
+
+        // SIMULASI ANGKA PERSENAN LOADING AWAL MASUK WEB
+        window.addEventListener('load', function() {
+            const persenAwal = document.getElementById('persenAwal');
+            const loadingAwal = document.getElementById('loadingAwal');
+            const kontenUtama = document.getElementById('kontenUtama');
+            
+            let hitungAwal = 0;
+            const intervalAwal = setInterval(() => {
+                hitungAwal += Math.floor(Math.random() * 15) + 5; // Naik acak biar estetik alami
+                if (hitungAwal >= 100) {
+                    hitungAwal = 100;
+                    clearInterval(intervalAwal);
+                    
+                    // Sembunyikan Loading Awal
+                    setTimeout(() => {
+                        loadingAwal.classList.add('opacity-0');
+                        setTimeout(() => {
+                            loadingAwal.classList.add('hidden');
+                            kontenUtama.classList.remove('opacity-0');
+                            kontenUtama.classList.add('fade-in');
+                        }, 400);
+                    }, 200);
+                }
+                persenAwal.innerText = hitungAwal + "%";
+            }, 80); 
+        });
+
+        // VALIDASI INPUT & PROSES PERSENAN SUBMIT KE WHATSAPP
+        document.getElementById('formPendaftaran').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Reset Notifikasi Error
+            document.getElementById('errNama').classList.add('hidden');
+            document.getElementById('errTgl').classList.add('hidden');
+            document.getElementById('errUmur').classList.add('hidden');
+            document.getElementById('errWA').classList.add('hidden');
+
+            const nama = document.getElementById('nama').value.trim();
+            const tanggalLahir = document.getElementById('tanggalLahir').value;
+            const umur = parseInt(document.getElementById('umur').value);
+            const whatsappPendaftar = document.getElementById('whatsapp').value.trim();
+            
+            let statusValid = true;
+
+            // 1. Cek Kebersihan Nama
+            if(/[^a-zA-Z\s]/.test(nama)) {
+                document.getElementById('errNama').classList.remove('hidden');
+                statusValid = false;
+            }
+
+            // 2. Cek Struktur Tanggal
+            const partTgl = tanggalLahir.split('/');
+            if(partTgl.length !== 3 || partTgl[2].length !== 4) {
+                document.getElementById('errTgl').classList.remove('hidden');
+                statusValid = false;
+            } else {
+                const d = parseInt(partTgl[0]), m = parseInt(partTgl[1]), y = parseInt(partTgl[2]);
+                const tanggalTest = new Date(y, m - 1, d);
+                if (tanggalTest.getFullYear() !== y || tanggalTest.getMonth() !== m - 1 || tanggalTest.getDate() !== d || y > 2026 || y < 1930) {
+                    document.getElementById('errTgl').classList.remove('hidden');
+                    statusValid = false;
+                } else {
+                    // 3. Cek Kesesuaian Umur & Tahun Lahir (Tahun dasar 2026)
+                    const selisihTahun = 2026 - y;
+                    if (Math.abs(selisihTahun - umur) > 1) {
+                        document.getElementById('errUmur').classList.remove('hidden');
+                        statusValid = false;
+                    }
+                }
+            }
+
+            // 4. Cek Validitas Nomor WA
+            if(!/^(08|628)\d{7,12}$/.test(whatsappPendaftar)) {
+                document.getElementById('errWA').classList.remove('hidden');
+                statusValid = false;
+            }
+
+            // Batalkan pengiriman jika ada manipulasi/asal ketik
+            if(!statusValid) return;
+
+            // JIKA VALIDASI SUKSES -> MULAI ANIMASI PERSENAN KIRIM DATA (TANPA CEK INTERNET)
+            const btnSubmit = document.getElementById('btnSubmit');
+            const btnText = document.getElementById('btnText');
+            const loadingIcon = document.getElementById('loadingIcon');
+            const popupSukses = document.getElementById('popupSukses');
+            const persenKirim = document.getElementById('persenKirim');
+            const statusKirimText = document.getElementById('statusKirimText');
+
+            btnSubmit.disabled = true;
+            btnText.innerText = "Mengunci Data...";
+            loadingIcon.classList.remove('hidden');
+
+            const nomorOwner = "6285600599514";
+            const alamat = document.getElementById('alamat').value;
+            const status = document.getElementById('status').value;
+            const email = document.getElementById('email').value;
+            const program = document.getElementById('program').value;
+
+            const pesan = `Halo Owner EOA, saya ingin mendaftar:%0A%0A` +
+                          `*Nama Lengkap:* ${encodeURIComponent(nama)}%0A` +
+                          `*Tanggal Lahir:* ${encodeURIComponent(tanggalLahir)}%0A` +
+                          `*Umur:* ${encodeURIComponent(umur)} Tahun%0A` +
+                          `*Tempat Tinggal:* ${encodeURIComponent(alamat)}%0A` +
+                          `*Sekolah/Pekerjaan:* ${encodeURIComponent(status)}%0A` +
+                          `*Email:* ${encodeURIComponent(email)}%0A` +
+                          `*No. WhatsApp:* ${encodeURIComponent(whatsappPendaftar)}%0A` +
+                          `*Program Pilihan:* ${encodeURIComponent(program)}%0A%0A` +
+                          `Data aman & tervalidasi sistem 100%.`;
+
+            const urlWhatsApp = `https://api.whatsapp.com/send?phone=${nomorOwner}&text=${pesan}`;
+
+            // Tampilkan Pop-Up Loading Persen Kedua
+            popupSukses.classList.remove('hidden');
+
+            let hitungKirim = 0;
+            const intervalKirim = setInterval(() => {
+                hitungKirim += Math.floor(Math.random() * 12) + 6; // Menghitung maju secara mulus
+                
+                if (hitungKirim >= 100) {
+                    hitungKirim = 100;
+                    clearInterval(intervalKirim);
+                    
+                    statusKirimText.innerText = "Selesai! Mengalihkan...";
+                    
+                    // Alihkan langsung ke WA setelah mencapai 100%
+                    setTimeout(() => {
+                        window.location.href = urlWhatsApp;
+                    }, 500);
+                }
+                persenKirim.innerText = hitungKirim + "%";
+            }, 60); // Total waktu simulasi kirim data sekitar 1-1.5 detik langsung beres
+        });
+    </script>
+</body>
+</html>
